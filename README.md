@@ -13,6 +13,27 @@ A command-line tool to backtest trading strategies on historical Kraken OHLCVT d
 
 ## Setup
 
+You can set up the environment in one of two ways:
+
+### Option 1: Using the PowerShell Setup Script (Windows/PowerShell)
+
+1. **Run the provided PowerShell script to automatically set up the virtual environment and install dependencies:**
+   ```powershell
+   # In PowerShell, from the project directory:
+   .\Init-Environment.ps1
+   ```
+   - To force recreation of the virtual environment, use:
+     ```powershell
+     .\Init-Environment.ps1 -Recreate
+     ```
+   - This script will:
+     - Create (or recreate) a `.venv` virtual environment in the project directory
+     - Upgrade pip
+     - Install all dependencies from `requirements.txt`
+   - After running, the virtual environment will be activated for the current session.
+
+### Option 2: Manual Setup
+
 1. **Clone the repository and navigate to the project directory:**
    ```sh
    git clone <your-repo-url>
