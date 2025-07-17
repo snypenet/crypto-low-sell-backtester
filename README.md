@@ -3,7 +3,7 @@
 A command-line tool to backtest trading strategies on historical Kraken OHLCVT data.
 
 ## Features
-- Buy at a 30, 15, 10, or 5-day low (using the 'low' price).
+- Buy at a 240, 120, 60, 30, 15, 10, or 5-day low (using the 'low' price).
 - Sell when price exceeds buy price by a target percent (with optional tolerance).
 - Supports trade fees (optional, configurable percent).
 - Handles Kraken OHLCVT files with or without headers.
@@ -53,7 +53,14 @@ You can set up the environment in one of two ways:
    - Edit `.env` and set `DATA_ROOT` to the path containing your Kraken OHLCVT CSV files.
 
 4. **Prepare your data:**
+   - Download historical Kraken OHLCVT data from the official source:
+     [Kraken Downloadable Historical OHLCVT Data](https://support.kraken.com/articles/360047124832-downloadable-historical-ohlcvt-open-high-low-close-volume-trades-data)
+   - Save the downloaded CSV files locally on your machine.
    - Place your Kraken OHLCVT files in the data directory. Files should be named like `{pair}_{timeframe}.csv` (e.g., `BTCUSD_1440.csv`).
+   - Set the path to your data directory in the `.env` file using the `DATA_ROOT` environment variable. For example:
+     ```env
+     DATA_ROOT=C:/path/to/your/kraken/data
+     ```
 
 ## Usage
 
