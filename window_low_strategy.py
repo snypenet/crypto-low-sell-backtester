@@ -2,7 +2,7 @@ import pandas as pd
 from typing import List, Dict, Any, Tuple
 from datetime import datetime, timedelta
 
-def simulate_strategy(
+def window_low_strategy(
     df: pd.DataFrame,
     starting_amount: float,
     low_window: int,
@@ -11,14 +11,15 @@ def simulate_strategy(
     use_fee: bool = False,
     fee_percent: float = 0.2
 ) -> Tuple[List[Dict[str, Any]], float]:
+    print("Running Window Low Strategy")
     """
-    N‑day‑low buy/sell strategy, stepping one *calendar* day at a time.
+    N‑day‑low buy/sell strategy (Window Low Strategy), stepping one *calendar* day at a time.
 
     Steps (condensed):
       1. Start at first date + low_window.
       2. Each day, look back low_window days (exclusive of from_date, inclusive of to_date)
          and get the window low.
-      3. Buy when today’s low < previous window low.
+      3. Buy when today's low < previous window low.
       4. After buying, advance day‑by‑day until any intraday *high* meets the
          target gain (± tolerance) and sell.
       5. Repeat until the last date.  If still holding at the end, sell at final close.
@@ -44,7 +45,7 @@ def simulate_strategy(
         # --- 1. compute look‑back window ---
         from_date = current_date - timedelta(days=low_window)
         to_date   = current_date
-        window_mask = (df['date'] > from_date) & (df['date'] <= to_date) & (df.index >= next_row_idx)
+        window_mask = (df['date'] >= from_date) & (df['date'] <= to_date) & (df.index >= next_row_idx)
         window_rows = df[window_mask]
         if window_rows.empty:
             # no trades at all in look‑back → skip forward a day
@@ -53,7 +54,7 @@ def simulate_strategy(
 
         window_low = window_rows['low'].min()
 
-        # --- 2. today’s trades ---
+        # --- 2. today's trades ---
         day_rows = df[(df['date'] == current_date) & (df.index >= next_row_idx)]
         if day_rows.empty:
             # still update sliding low then move on
