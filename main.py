@@ -1,6 +1,8 @@
 import argparse
 from data_loader import get_data_file_path, load_ohlcvt_data
-from strategy import simulate_strategy
+from window_low_strategy import window_low_strategy
+from window_low_average_strategy import window_low_average_strategy
+from window_low_ema_strategy import window_low_ema_strategy
 import pandas as pd
 from datetime import datetime, UTC
 
@@ -15,6 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-log-path", type=str, default=None, help="Optional path to export the trade log as CSV")
     parser.add_argument("--use-fee", action="store_true", help="If set, apply a fee to each trade")
     parser.add_argument("--fee-percent", type=float, default=0.2, help="Fee percent per trade (default: 0.2)")
+    parser.add_argument("--strategy", type=str, default="window_low", choices=["window_low", "window_low_average", "window_low_ema"], help="Strategy type to use (default: window_low)")
 
     args = parser.parse_args()
 
@@ -35,16 +38,40 @@ if __name__ == "__main__":
             end_date = datetime.fromtimestamp(end_ts, UTC).strftime('%Y-%m-%d %H:%M:%S')
             print(f"Data range: {start_date} to {end_date} (UTC)")
 
-        # Run strategy simulation
-        trade_log, final_balance = simulate_strategy(
-            df,
-            args.starting_amount,
-            args.low_window,
-            args.target_percent,
-            args.tolerance,
-            use_fee=args.use_fee,
-            fee_percent=args.fee_percent
-        )
+        # Run selected strategy
+        if args.strategy == "window_low":
+            trade_log, final_balance = window_low_strategy(
+                df,
+                args.starting_amount,
+                args.low_window,
+                args.target_percent,
+                args.tolerance,
+                use_fee=args.use_fee,
+                fee_percent=args.fee_percent
+            )
+        elif args.strategy == "window_low_average":
+            trade_log, final_balance = window_low_average_strategy(
+                df,
+                args.starting_amount,
+                args.low_window,
+                args.target_percent,
+                args.tolerance,
+                use_fee=args.use_fee,
+                fee_percent=args.fee_percent
+            )
+        elif args.strategy == "window_low_ema":
+            trade_log, final_balance = window_low_ema_strategy(
+                df,
+                args.starting_amount,
+                args.low_window,
+                args.target_percent,
+                args.tolerance,
+                use_fee=args.use_fee,
+                fee_percent=args.fee_percent
+            )
+        else:
+            raise ValueError(f"Unknown strategy: {args.strategy}")
+
         print("\nTrade Log:")
         for trade in trade_log:
             print(trade)

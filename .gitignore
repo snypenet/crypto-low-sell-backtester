@@ -55,11 +55,8 @@ coverage.xml
 .python-version
 
 # dotenv
-.env
-.env.*
 
 # VS Code
-.vscode/
 
 # Data and log output
 *.csv
@@ -76,3 +73,5 @@ Desktop.ini
 
 # Ignore Kraken data files (optional, comment out if you want to track data)
 # /path/to/your/kraken/data/ 
+config.bat
+node_modules
